@@ -67,3 +67,9 @@ def test_run_hook_passes_extra_env(vault_dir, monkeypatch):
     save_hooks(vault_dir, {"post-push": "test -n \"$_ENVAULT_TEST_VAR\""})
     code = run_hook(vault_dir, "post-push", env={"_ENVAULT_TEST_VAR": "hello"})
     assert code == 0
+
+
+def test_run_hook_raises_on_unknown_event(vault_dir):
+    """run_hook should raise ValueError when given an unrecognised event name."""
+    with pytest.raises(ValueError, match="Unknown hook event"):
+        run_hook(vault_dir, "on-deploy")
