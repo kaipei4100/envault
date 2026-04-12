@@ -74,6 +74,13 @@ def test_import_empty_file_raises(tmp_path, vault_dir):
         import_env_file(empty, vault_dir, PASSWORD)
 
 
+def test_import_wrong_password_raises(env_file, vault_dir):
+    """Decrypting with the wrong password should raise an error."""
+    import_env_file(env_file, vault_dir, PASSWORD)
+    with pytest.raises(Exception):
+        read_vault(vault_dir, "wrong-password")
+
+
 # ---------------------------------------------------------------------------
 # preview_import
 # ---------------------------------------------------------------------------
