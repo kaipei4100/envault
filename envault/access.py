@@ -68,3 +68,18 @@ def check_permission(vault_dir: Path, identity: str, required: str) -> None:
         raise PermissionError(
             f"Identity '{identity}' has '{level}' but '{required}' is required"
         )
+
+
+def has_permission(vault_dir: Path, identity: str, required: str) -> bool:
+    """Return True if *identity* has at least *required* level, False otherwise.
+
+    Unlike :func:`check_permission`, this never raises; it is intended for
+    conditional logic where a boolean result is more convenient than catching
+    a ``PermissionError``.
+    """
+    if required not in LEVELS:
+        raise ValueError(f"Unknown required level '{required}'")
+    level = get_permission(vault_dir, identity)
+    if level is None:
+        return False
+    return LEVELS.index(level) >= LEVELS.index(required)
