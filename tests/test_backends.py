@@ -64,7 +64,9 @@ def test_download_raises_for_missing_key(store: LocalBackend, tmp_path: Path) ->
 
 
 def test_list_keys_empty_store(store: LocalBackend) -> None:
-    assert store.listn
+    assert store.list_keys() == []
+
+
 def test_list_keys_returns_all_files(store: LocalBackend, sample_file: Path) -> None:
     store.upload(sample_file, "project/v1.enc")
     store.upload(sample_file, "project/v2.enc")
