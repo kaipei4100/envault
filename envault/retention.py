@@ -62,3 +62,23 @@ def apply_retention(vault_path: Path, available_versions: List[int]) -> List[int
     sorted_versions = sorted(available_versions)
     prune_count = max(0, len(sorted_versions) - keep)
     return sorted_versions[:prune_count]
+
+
+def retention_status(vault_path: Path, available_versions: List[int]) -> dict:
+    """Return a summary dict describing the current retention state for *vault_path*.
+
+    Keys:
+        ``keep``      – configured limit, or None if no policy is set.
+        ``total``     – total number of available versions.
+        ``to_prune``  – list of version numbers that would be pruned.
+        ``to_keep``   – list of version numbers that would be retained.
+    """
+    keep = get_retention(vault_path)
+    to_prune = apply_retention(vault_path, available_versions)
+    to_keep = [v for v in sorted(available_versions) if v not in to_prune]
+    return {
+        "keep": keep,
+        "total": len(available_versions),
+        "to_prune": to_prune,
+        "to_keep": to_keep,
+    }
