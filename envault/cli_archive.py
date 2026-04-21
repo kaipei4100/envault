@@ -18,6 +18,8 @@ def archive_group() -> None:
 @click.option("--keep", default=3, show_default=True, help="Number of recent snapshots to keep.")
 def archive_create(vault: str, password: str, keep: int) -> None:
     """Archive old snapshots, keeping the N most recent."""
+    if keep < 1:
+        raise click.BadParameter("Must keep at least 1 snapshot.", param_hint="'--keep'")
     result = create_archive(Path(vault), password, keep_latest=keep)
     if not result.versions:
         click.echo("Nothing to archive.")
